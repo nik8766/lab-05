@@ -12,7 +12,7 @@ def main():
     
     poke_info = get_pokemon_info("Rockruff")
     print(poke_info)
-    return
+    
 
 def get_pokemon_info(pokemon_name):
     """Gets information about a specified Pokemon from the PokeAPI.
@@ -29,26 +29,34 @@ def get_pokemon_info(pokemon_name):
     # TODO: Build a clean URL and use it to send a GET request
     print(f"Getting information for {pokemon_name}...", end='')
 
-    URL = POKE_API_URL
-    resp_msg = requests.get(URL)
+    URL = f'{POKE_API_URL}{pokemon_name}'
 
 
     # TODO: If the GET request was successful, convert the JSON-formatted message body text to a dictionary and return it
-    if resp_msg.status_code == requests.codes.ok:
-        print('success')
 
-        return resp_msg.json()
+    try:
+        resp_msg = requests.get(URL)
+
+        if resp_msg.status_code == requests.codes.ok:
+            print('success')
+            return resp_msg.json()
     
 
     # TODO: If the GET request failed, print the error reason and return None
-    else:
-        print('failure')
-        print(f'Response code: {resp_msg.status_code} ({resp_msg.reason})')         
+        else:
+            print('failure')
+            print(f'Response code: {resp_msg.status_code} ({resp_msg.reason})')
+            return None
+
+    except requests.exception.RequestsException as e:
+        print("faiure")
+        print('Requests error: ',{str(e)}) 
+        return None        
 
 
     
 
-    return 
+    
 
 if __name__ == '__main__':
     main()
